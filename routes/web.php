@@ -14,3 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Error example
+Route::get('/example', function () {
+    return view('abc');
+});
+
+// Directory route example
+Route::get('/book/war-and-peace', function() {
+    return 'You want to view the book war and peace...';
+});
+
