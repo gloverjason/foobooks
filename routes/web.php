@@ -42,4 +42,9 @@ Route::get('/contact', 'PageController@contact');
 
 // Route::get('/check-answer', 'TriviaController@checkAnswer');
 
+/**
+ * Practice
+ */
+Route::any('/practice/{n?}', 'PracticeController@index');
+
 
