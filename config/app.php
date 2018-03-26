@@ -1,8 +1,18 @@
 <?php
 
 return [
-
     'supportEmail' => 'help@foobooks.dwa15.me',
+
+    'nav' => [
+        '/books' => 'Books',
+        '/books/create' => 'New Book',
+        '/books/search' => 'Search',
+        '/trivia' => 'Trivia',
+        '/practice' => 'Practice',
+        '/about' => 'About',
+        '/contact' => 'Contact',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -53,7 +63,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://foobooks.jasonsapps.tech'),
+    'url' => env('APP_URL', 'http://foobooks.dwa15.me'),
 
     /*
     |--------------------------------------------------------------------------

@@ -1,50 +1,34 @@
 <?php
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-
+/**
+ * Misc. pages
+ */
 Route::get('/', 'PageController@welcome');
-
 Route::get('/about', 'PageController@about');
+Route::get('/contact', 'PageController@contact');
 
-// Error example
-/*Route::get('/example', function () {
-    return view('abc');
-});*/
 
-// Directory route example
-/*Route::get('/book/war-and-peace', function() {
-    return 'You want to view the book war and peace...';
-});*/
-
-/*Route::get('/books', function () {
-    return 'Here are all the books in the library';
-});*/
-// Above is changed to
+/**
+ * Books
+ */
 Route::get('/books', 'BookController@index');
-// because of controller
+
+Route::get('/books/create', 'BookController@create');
+Route::post('/books', 'BookController@store');
+
+Route::get('/books/search', 'BookController@search');
 
 Route::get('/books/{title}', 'BookController@show');
 
-Route::get('/contact', 'PageController@contact');
-
-// Root URL loads homepage (p3)
-// Route::get('/', 'TriviaController@index');
-
-// Route::get('/check-answer', 'TriviaController@checkAnswer');
 
 /**
  * Practice
  */
 Route::any('/practice/{n?}', 'PracticeController@index');
 
+
+/**
+ * Example routes shown at the end of Week 6 and Week 8 lectures
+ */
+Route::get('/trivia', 'TriviaController@index');
+Route::get('/trivia/result', 'TriviaController@result');
 
