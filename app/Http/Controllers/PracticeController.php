@@ -13,11 +13,91 @@ use App\Book;
 class PracticeController extends Controller
 {
 
+    /**
+     * Examples of collection magic
+     */
+    public function practice19()
+    {
+        $books = Book::all();
+        # Treat results as a String
+        # echo $books;
+
+        # Treat results as an Array
+        # foreach($books as $book) {
+        #     dump($book['title']);
+        # }
+
+        # Treat results as an Object
+        foreach($books as $book) {
+            dump($book->title);
+        }
+    }
+
+    public function practice18()
+    {
+        # Find book by id
+        $results = Book::find(1);
+
+        # Yields a collection of multiple books
+        $results = Book::all();
+        //$results = Book::orderBy('title')->get();
+
+        # Should match 1 book; yields a Collection of 1 Book
+        //$results = Book::where('author', 'F. Scott Fitzgerald')->get();
+        //$results = Book::orderBy('title')->first();
+
+        # Should match 0 books; yields an empty Collection
+        //$results = Book::where('author', 'Virginia Wolf')->get();
+
+        # Even though we limit it to 1 book, we're using the `get` fetch method so we get a Collection (of 1 Book)
+        //$results = Book::limit(1)->get();
+
+        dump($results->toArray());
+        // dump($results);
+    }
+
+    /**
+     * [BONUS]
+     * Find any books by the author “J.K. Rowling” and update the author name to be “JK Rowling”.
+     */
+    public function practice17bonus()
+    {
+        Book::dump();
+        # Approach # 1
+        # Get all the books that match the criteria
+        /*$books = Book::where('author', '=', 'J.K. Rowling')->get();
+        $matches = $books->count();
+        dump('Found ' . $matches . ' ' . str_plural('book', $matches) . ' that match this search criteria');
+        if ($matches > 0) {
+            # Loop through each book and update them
+            foreach ($books as $book) {
+                $book->author = 'JK Rowling';
+                $book->save();
+                # Underlying SQL: update `books` set `updated_at` = '20XX-XX-XX XX:XX:XX', `author` = 'JK Rowling' where `id` = '4'
+            }
+        }*/
+
+        # Approach #2
+        # More ideal - Requires 1 query instead of 3
+        Book::where('author', '=', 'J.K. Rowling')->update(['author' => 'JK Rowling']);
+
+        Book::dump();
+        //Practice::resetDatabase();
+    }
+
     public function practice17()
     # Assignment_11_Practice005 = Remove any/all books by the author “J.K. Rowling”..
     {
+        # Show books before delete
+        Book::dump();
+
         $results = Book::where('author', '=', 'J.K. Rowling')->delete();
-        dump($results);
+
+        #Show books after delete
+        Book::dump();
+
+        # To activate for first use, use command composer dump-autoload
+        //Practice::resetDatabase();
     }
 
     public function practice16()

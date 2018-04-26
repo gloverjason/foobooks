@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Log;
+use App\Book;
+use App\Author;
+use App\Tag;
 
 class BookController extends Controller
 {
@@ -12,12 +15,36 @@ class BookController extends Controller
      */
     public function index()
     {
-        return view('books.index');
+        $books = Book::orderBy('title')->get();
+
+        # Query the database to get the last 3 books added
+        # $newBooks = Book::latest()->limit(3)->get();
+
+        # [Better] Query the existing Collection to get the last 3 books added
+        $newBooks = $books->sortByDesc('created_at')->take(3);
+
+        return view('books.index')->with([
+            'books' => $books,
+            'newBooks' => $newBooks,
+        ]);
     }
 
-    public function show($title)
+    /*
+     * GET /books/{id}
+     */
+    public function show($id)
     {
-        return view('books.show')->with(['title' => $title]);
+        $book = Book::find($id);
+
+        if (!$book) {
+            return redirect('/books')->with(
+                ['alert' => 'Book ' . $id . ' not found.']
+            );
+        }
+
+        return view('books.show')->with([
+            'book' => $book
+        ]);
     }
 
     /**
@@ -74,16 +101,22 @@ class BookController extends Controller
     }
 
     /**
+     * Show the form to create a new book
      * GET /books/create
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('books.create');
+        return view('books.create')->with([
+            'authorsForDropdown' => Author::getForDropdown(),
+            'tagsForCheckboxes' => Tag::getForCheckboxes(),
+            'book' => new Book(),
+            'tags' => [],
+        ]);
     }
 
     /**
+     * Process the form to create a new book
      * POST /books
-     * @Todo: Add the code to actually add the book to the database
      */
     public function store(Request $request)
     {
@@ -92,15 +125,122 @@ class BookController extends Controller
             'published_year' => 'required|digits:4|numeric',
             'cover_url' => 'required|url',
             'purchase_url' => 'required|url',
+            'author_id' => 'required'
         ]);
 
-        # EXIT.... Redirect
+        # Save the book to the database
+        $book = new Book();
+        $book->title = $request->title;
+        $book->author_id = $request->author_id;
+        $book->published_year = $request->published_year;
+        $book->cover_url = $request->cover_url;
+        $book->purchase_url = $request->purchase_url;
+        $book->save();
 
-        # Eventually, code will go here to take the form data
-        # and create a new book in the database...
+        $book->tags()->sync($request->input('tags'));
 
-        Log::info('Add the book ' . $request->input('title'));
+        # Logging code just as proof of concept that this method is being invoked
+        # Log::info('Add the book ' . $book->title);
 
-        return redirect('/books');
+        # Send the user back to the page to add a book; include the title as part of the redirect
+        # so we can display a confirmation message on that page
+        return redirect('/books/create')->with([
+            'alert' => 'Your book ' . $book->title . ' was added.'
+        ]);
     }
+
+    /**
+     * Show the form to edit an existing book
+     * GET /books/{id}/edit
+     */
+    public function edit($id)
+    {
+        # Find the book the visitor is requesting to edit
+        $book = Book::find($id);
+
+        # Handle the case where we can't find the given book
+        if (!$book) {
+            return redirect('/books')->with(
+                ['alert' => 'Book ' . $id . ' not found.']
+            );
+        }
+
+        # Show the book edit form
+        return view('books.edit')->with([
+            'authorsForDropdown' => Author::getForDropdown(),
+            'tagsForCheckboxes' => Tag::getForCheckboxes(),
+            'tags' => $book->tags()->pluck('tags.id')->toArray(),
+            'book' => $book
+        ]);
+    }
+
+    /**
+     * Process the form to edit an existing book
+     * PUT /books/{id}
+     */
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'title' => 'required',
+            'published_year' => 'required|digits:4|numeric',
+            'cover_url' => 'required|url',
+            'purchase_url' => 'required|url',
+            'author_id' => 'required'
+        ]);
+
+        # Fetch the book we want to update
+        $book = Book::find($id);
+
+        # Update data
+        $book->title = $request->title;
+        $book->published_year = $request->published_year;
+        $book->author_id = $request->author_id;
+        $book->cover_url = $request->cover_url;
+        $book->purchase_url = $request->purchase_url;
+
+        $book->tags()->sync($request->input('tags'));
+
+        # Save edits
+        $book->save();
+
+        # Send the user back to the edit page in case they want to make more edits
+        return redirect('/books/' . $id . '/edit')->with([
+            'alert' => 'Your changes were saved'
+        ]);
+    }
+
+    /*
+    * Asks user to confirm they actually want to delete the book
+    * GET /books/{id}/delete
+    */
+    public function delete($id)
+    {
+        $book = Book::find($id);
+
+        if (!$book) {
+            return redirect('/books')->with('alert', 'Book not found');
+        }
+
+        return view('books.delete')->with([
+            'book' => $book,
+        ]);
+    }
+
+    /*
+    * Actually deletes the book
+    * DELETE /books/{id}/delete
+    */
+    public function destroy($id)
+    {
+        $book = Book::find($id);
+
+        $book->tags()->detach();
+
+        $book->delete();
+
+        return redirect('/books')->with([
+            'alert' => '“' . $book->title . '” was removed.'
+        ]);
+    }
+
 }

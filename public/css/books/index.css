@@ -1,0 +1,54 @@
+/*----------------------------------------------------
+New Books aside
+-----------------------------------------------------*/
+#newBooks {
+    background-color: Azure;
+    padding: 5px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+#newBooks ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#newBooks h2 {
+    margin-top: 0;
+}
+
+
+/*----------------------------------------------------
+Listing of all books
+-----------------------------------------------------*/
+a.book {
+    display: block;
+    text-decoration: none;
+    color: black;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: left;
+    border: 1px solid #eee;
+}
+
+a.book:hover {
+    border: 1px solid black;
+}
+
+a.book h2 {
+    font-size: 1.3em;
+    margin: 4px 0 4px 0;
+    font-style: italic;
+    text-align: left;
+}
+
+a.book .cover {
+    float: left;
+    width: 100px;
+    height: 137px;
+    background-color: #eee;
+    border: 1px solid black;
+    margin-right: 10px;
+}

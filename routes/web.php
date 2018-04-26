@@ -17,7 +17,7 @@ Route::post('/books', 'BookController@store');
 
 Route::get('/books/search', 'BookController@search');
 
-Route::get('/books/{title}', 'BookController@show');
+Route::get('/books/{id}', 'BookController@show');
 
 
 /**
@@ -33,12 +33,12 @@ Route::get('/trivia', 'TriviaController@index');
 Route::get('/trivia/result', 'TriviaController@result');
 
 // Temporary route to test database connection
-Route::get('/debug', function () {
+/*Route::get('/debug', function () {
 
     $debug = [
         'Environment' => App::environment(),
         'Database defaultStringLength' => Illuminate\Database\Schema\Builder::$defaultStringLength,
-    ];
+    ];*/
 
     /*
     The following commented out line will print your MySQL credentials.
@@ -50,7 +50,7 @@ Route::get('/debug', function () {
     // do NOT run code below on production server; see above for explanation
     #$debug['MySQL connection config'] = config('database.connections.mysql');
 
-    try {
+   /* try {
         $databases = DB::select('SHOW DATABASES;');
         $debug['Database connection test'] = 'PASSED';
         $debug['Databases'] = array_column($databases, 'Database');
@@ -59,5 +59,5 @@ Route::get('/debug', function () {
     }
 
     dump($debug);
-});
+});*/
 
