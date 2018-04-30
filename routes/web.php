@@ -5,59 +5,39 @@
 Route::get('/', 'PageController@welcome');
 Route::get('/about', 'PageController@about');
 Route::get('/contact', 'PageController@contact');
-
-
 /**
  * Books
  */
-Route::get('/books', 'BookController@index');
-
+# CREATE
+# Show the form to add a new book
 Route::get('/books/create', 'BookController@create');
+# Process the form to add a new book
 Route::post('/books', 'BookController@store');
-
-Route::get('/books/search', 'BookController@search');
-
+# READ
+# Show a listing of all the books
+Route::get('/books', 'BookController@index');
+# Show an individual book
 Route::get('/books/{id}', 'BookController@show');
-
-
+# UPDATE
+# Show the form to edit a specific book
+Route::get('/books/{id}/edit', 'BookController@edit');
+# Process the form to edit a specific book
+Route::put('/books/{id}', 'BookController@update');
+# DELETE
+# Show the page to confirm deletion of a book
+Route::get('/books/{id}/delete', 'BookController@delete');
+# Process the deletion of a book
+Route::delete('/books/{id}', 'BookController@destroy');
+# MISC
+# Search books
+# TODO: Update to query database instead of books.json file
+Route::get('/books/search', 'BookController@search');
 /**
  * Practice
  */
 Route::any('/practice/{n?}', 'PracticeController@index');
-
-
 /**
  * Example routes shown at the end of Week 6 and Week 8 lectures
  */
 Route::get('/trivia', 'TriviaController@index');
 Route::get('/trivia/result', 'TriviaController@result');
-
-// Temporary route to test database connection
-/*Route::get('/debug', function () {
-
-    $debug = [
-        'Environment' => App::environment(),
-        'Database defaultStringLength' => Illuminate\Database\Schema\Builder::$defaultStringLength,
-    ];*/
-
-    /*
-    The following commented out line will print your MySQL credentials.
-    Uncomment this line only if you're facing difficulties connecting to the
-    database and you need to confirm your credentials. When you're done
-    debugging, comment it back out so you don't accidentally leave it
-    running on your production server, making your credentials public.
-    */
-    // do NOT run code below on production server; see above for explanation
-    #$debug['MySQL connection config'] = config('database.connections.mysql');
-
-   /* try {
-        $databases = DB::select('SHOW DATABASES;');
-        $debug['Database connection test'] = 'PASSED';
-        $debug['Databases'] = array_column($databases, 'Database');
-    } catch (Exception $e) {
-        $debug['Database connection test'] = 'FAILED: '.$e->getMessage();
-    }
-
-    dump($debug);
-});*/
-

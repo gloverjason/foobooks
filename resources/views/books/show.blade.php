@@ -14,8 +14,13 @@
     <div class='book cf'>
         <img src='{{ $book->cover_url }}' class='cover' alt='Cover image for {{ $book->title }}'>
         <h2>{{ $book->title }}</h2>
-        <p>By {{ $book->author }}</p>
+        <p>By {{ $book->author->getFullName() }}</p>
         <p>Published in {{ $book->published_year }}</p>
-        <a href='{{ $book->purchase_url }}'>Purchase</a>
+
+        <ul class='bookActions'>
+            <li><a href='{{ $book->purchase_url }}'><i class="fas fa-shopping-cart"></i> Purchase</a>
+            <li><a href='/books/{{ $book->id }}/edit'><i class="fas fa-pencil-alt"></i> Edit</a>
+            <li><a href='/books/{{ $book->id }}/delete'><i class="fas fa-trash-alt"></i> Delete</a>
+        </ul>
     </div>
 @endsection
